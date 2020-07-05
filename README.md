@@ -1,5 +1,7 @@
 # chinese-completion
-中文补全插件
+JetBrains 系 IDE 中文补全插件
+
+[下载地址](https://plugins.jetbrains.com/plugin/14657---)
 
 支持 JetBrains 系列 IDE
 
