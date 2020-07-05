@@ -3,7 +3,7 @@ plugins {
     kotlin("jvm") version "1.3.72"
 }
 
-group = "org.example"
+group = "com.zzj"
 version = "1.1-SNAPSHOT"
 
 repositories {
@@ -31,7 +31,6 @@ tasks {
 tasks.getByName<org.jetbrains.intellij.tasks.PatchPluginXmlTask>("patchPluginXml") {
     changeNotes(
         """
-      Add change notes here.<br>
-      <em>most HTML tags may be used</em>"""
+      支持原补全的所有功能"""
     )
 }
