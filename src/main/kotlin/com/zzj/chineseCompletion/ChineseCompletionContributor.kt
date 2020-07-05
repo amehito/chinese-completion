@@ -8,30 +8,24 @@ import com.intellij.codeInsight.completion.impl.CamelHumpMatcher
 
 class ChineseCompletionContributor : CompletionContributor() {
     override fun fillCompletionVariants(parameters: CompletionParameters, result: CompletionResultSet) {
-        super.fillCompletionVariants(parameters, result)
+        result.restartCompletionOnAnyPrefixChange()
         result.withPrefixMatcher(ChineseAndCamelHumpMatcher(result.prefixMatcher.prefix, false)).also { newResult ->
-            newResult.runRemainingContributors(parameters) { newResult.addElement(it.lookupElement) }
+            newResult.runRemainingContributors(parameters) { newResult.passResult(it) }
         }
     }
 }
 
 class ChineseAndCamelHumpMatcher(prefix: String, caseSensitive: Boolean) : CamelHumpMatcher(prefix, caseSensitive) {
-    private val matchResultCache = mutableMapOf<String, Boolean>()
-    private val isChineseCache = mutableMapOf<String, Boolean>()
-
-    private fun isChinese(name: String) = isChineseCache.getOrPut(name, { name.any { Pinyin.isChinese(it) } })
+    private fun isChinese(name: String) = name.any { Pinyin.isChinese(it) }
 
     private fun toPinyin(name: String) = name.toCharArray().joinToString("") {
-        if (Pinyin.isChinese(it))
-            Pinyin.toPinyin(it).run { first() + drop(1).toLowerCase() }
-        else
-            it.toString()
+        if (Pinyin.isChinese(it)) Pinyin.toPinyin(it).toLowerCase().capitalize() else it.toString()
     }
 
     override fun prefixMatches(name: String): Boolean {
         val matchOld = super.prefixMatches(name)
         if (!matchOld && isChinese(name)) {
-            return matchResultCache.getOrPut(name, { super.prefixMatches(toPinyin(name)) })
+            return super.prefixMatches(toPinyin(name))
         }
         return matchOld
     }
