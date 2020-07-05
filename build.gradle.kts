@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "com.zzj"
-version = "1.1-SNAPSHOT"
+version = "1.2-SNAPSHOT"
 
 repositories {
     mavenCentral()
@@ -30,7 +30,6 @@ tasks {
 }
 tasks.getByName<org.jetbrains.intellij.tasks.PatchPluginXmlTask>("patchPluginXml") {
     changeNotes(
-        """
-      支持原补全的所有功能"""
+        """修复补全窗口自动关闭的 bug"""
     )
 }
